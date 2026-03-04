@@ -55,8 +55,35 @@
             }
         }
 
+        @keyframes shake {
+
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+
+            20%,
+            60% {
+                transform: translateX(-8px);
+            }
+
+            40%,
+            80% {
+                transform: translateX(8px);
+            }
+        }
+
+        .container h2 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 32px;
+            text-align: center;
+            letter-spacing: 1px;
+        }
+
         .form-group {
-            margin-bottom: 24px;
+            margin-bottom: 20px;
         }
 
         label {
@@ -86,6 +113,18 @@
             box-shadow: 0 0 0 4px rgba(245, 166, 35, 0.15);
         }
 
+        .error-msg {
+            display: none;
+            color: #ff6b6b;
+            font-size: 0.85rem;
+            text-align: center;
+            margin-bottom: 16px;
+            padding: 10px;
+            background: rgba(255, 107, 107, 0.1);
+            border-radius: 8px;
+            border: 1px solid rgba(255, 107, 107, 0.3);
+        }
+
         .btn-push {
             width: 100%;
             padding: 14px;
@@ -98,6 +137,7 @@
             cursor: pointer;
             transition: all 0.3s;
             box-shadow: 0 8px 20px rgba(245, 166, 35, 0.3);
+            margin-top: 8px;
         }
 
         .btn-push:hover {
@@ -109,24 +149,59 @@
         .btn-push:active {
             transform: translateY(0);
         }
+
+        .shake {
+            animation: shake 0.4s ease;
+        }
     </style>
 </head>
 
 <body>
 
     <div class="container">
+        <h2>🔐 Đăng Nhập</h2>
+
         <div class="form-group">
-            <label for="txtUserName">UserName</label>
-            <input type="text" id="textboxUserName" placeholder="Nhập tên của bạn...">
+            <label for="textboxUserName">UserName</label>
+            <input type="text" id="textboxUserName" placeholder="Nhập tên đăng nhập..." autocomplete="username">
         </div>
-    </div>
-    <div class="container">
+
         <div class="form-group">
-            <label for="txtpassword">Password</label>
-            <input type="text" id="textboxPassword" placeholder="Nhập mật khẩu...">
+            <label for="textboxPassword">Password</label>
+            <input type="password" id="textboxPassword" placeholder="Nhập mật khẩu..." autocomplete="current-password">
         </div>
+
+        <div class="error-msg" id="errorMsg">❌ Tên đăng nhập hoặc mật khẩu không đúng!</div>
+
+        <button class="btn-push" id="btnLogin" onclick="handleLogin()">Đăng nhập</button>
     </div>
-    <button class="btn-push">Đăng nhập</button>
+
+    <script>
+        function handleLogin() {
+            const username = document.getElementById('textboxUserName').value.trim();
+            const password = document.getElementById('textboxPassword').value.trim();
+            const errorMsg = document.getElementById('errorMsg');
+            const container = document.querySelector('.container');
+
+            if (username === 'admin' && password === 'admin') {
+                errorMsg.style.display = 'none';
+                document.getElementById('btnLogin').textContent = '✅ Thành công!';
+                setTimeout(() => {
+                    window.location.href = 'success.html';
+                }, 600);
+            } else {
+                errorMsg.style.display = 'block';
+                container.classList.remove('shake');
+                void container.offsetWidth; // trigger reflow
+                container.classList.add('shake');
+            }
+        }
+
+        // Allow pressing Enter to login
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Enter') handleLogin();
+        });
+    </script>
 
 </body>
 
